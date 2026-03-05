@@ -9,6 +9,7 @@ from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 from slack_sdk.errors import SlackApiError
 
+from preferences import is_opted_out, opt_in, opt_out
 from config import (
     SLACK_BOT_TOKEN,
     SLACK_SIGNING_SECRET,
@@ -72,6 +73,15 @@ def get_celebration_prompt_blocks():
                         "emoji": True
                     },
                     "action_id": "skip_celebration"
+                },
+                {
+                    "type": "button",
+                    "text": {
+                        "type": "plain_text",
+                        "text": "Stop nudging me",
+                        "emoji": True
+                    },
+                    "action_id": "nudge_opt_out"
                 }
             ]
         }
@@ -244,6 +254,10 @@ def send_celebration_prompts():
                 if user_info["user"].get("is_bot", False):
                     continue
 
+                if is_opted_out(user_id):
+                    logger.info(f"Skipping opted-out user {user_id}")
+                    continue
+
                 # Send DM to user
                 app.client.chat_postMessage(
                     channel=user_id,
@@ -294,6 +308,28 @@ def handle_share_private(ack, body, client):
         )
     except SlackApiError as e:
         logger.error(f"Error opening private modal: {e}")
+
+
+@app.action("nudge_opt_out")
+def handle_nudge_opt_out(ack, body, client):
+    ack()
+    user_id = body["user"]["id"]
+    opt_out(user_id)
+    client.chat_postMessage(
+        channel=user_id,
+        text="No problem — you won't get Friday nudges anymore. You can still share a win anytime with `/confetti`."
+    )
+
+
+@app.action("nudge_opt_in")
+def handle_nudge_opt_in(ack, body, client):
+    ack()
+    user_id = body["user"]["id"]
+    opt_in(user_id)
+    client.chat_postMessage(
+        channel=user_id,
+        text="You're back in! You'll get the Friday nudge again."
+    )
 
 
 @app.action("skip_celebration")
@@ -506,6 +542,20 @@ def update_home_tab(client, event, logger):
                                 },
                                 "style": "primary",
                                 "action_id": "home_share_win"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "actions",
+                        "elements": [
+                            {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "Re-enable Friday nudges",
+                                    "emoji": True
+                                },
+                                "action_id": "nudge_opt_in"
                             }
                         ]
                     }

@@ -16,3 +16,6 @@ ENV/
 # IDE
 .vscode/
 .idea/
+
+# Runtime data
+user_prefs.json

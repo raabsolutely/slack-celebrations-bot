@@ -14,6 +14,12 @@ import logging
 from datetime import datetime
 import pytz
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 from config import (
     SCHEDULE_DAY,
     SCHEDULE_HOUR,

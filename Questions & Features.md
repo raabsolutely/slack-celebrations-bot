@@ -1,5 +1,12 @@
 # Questions & Features
 
+## Feature ideas
+
+### User-controlled nudge frequency
+Let users set how often they want to be nudged by the bot (e.g. weekly, bi-weekly, monthly, or never). Currently opt-out is all-or-nothing — a frequency setting would be a softer middle ground.
+
+---
+
 ## Open questions
 
 ### Channel naming & placement

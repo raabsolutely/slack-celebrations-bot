@@ -46,9 +46,7 @@ TIMEZONE = os.environ.get("TIMEZONE", "America/New_York")
 # MESSAGE TEMPLATES
 # =============================================================================
 PROMPT_MESSAGE = """
-*Happy Friday!*
-
-It's time to celebrate the wins from this week!
+*Time to celebrate your wins or a team member.*
 
 Take a moment to reflect: What's something worth celebrating? It could be:
 • A project milestone you hit
@@ -56,7 +54,7 @@ Take a moment to reflect: What's something worth celebrating? It could be:
 • Something you learned
 • A personal achievement
 
-Share your win with the team! :star2:
+Share your win on the confetti channel!
 """
 
 PUBLIC_CELEBRATION_HEADER = "*A Win Worth Celebrating!*"

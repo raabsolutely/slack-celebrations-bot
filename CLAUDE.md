@@ -68,6 +68,17 @@ TIMEZONE=Europe/Berlin
 - ✅ Categories: 🏆 Project Milestone, ⚡ Problem Solved, 💡 Today I Learned, ⭐ Personal Win, ✨ Other
 - ✅ Wins post to #small-wins (SMALL_WINS_CHANNEL_ID)
 
+## Open To-Dos
+> At the start of every session, show this list to the user before anything else.
+
+- [ ] Test opt-in / opt-out flow end to end
+- [ ] Register `/confetti` and `/highfive` slash commands in Slack app settings
+- [ ] Update bot display name to Confetti / Highfive (Bot User + reinstall app)
+- [ ] Update nudge message design
+- [ ] Hand off to IT team for company Slack deployment
+
+*(Keep this list in sync with `Questions & Features.md`)*
+
 ## Current Status
 - ✅ Bot fully working in personal test Slack workspace
 - ✅ Code committed and pushed to GitHub

@@ -11,7 +11,7 @@ Submissions take seconds. Pick a category, write a line, and choose to share pub
 - Clean submission modal — no friction
 - Posts to a shared #small-wins channel
 - Anonymous posting supported
-- `/celebrate` to share a win anytime
+- `/confetti` to share a win anytime (also `/highfive` or `/celebrate`)
 
 Recognition shouldn't wait for the annual review — starting with recognising yourself.
 
@@ -22,7 +22,7 @@ Recognition shouldn't wait for the annual review — starting with recognising y
 - **Category tagging** - Optional categories like "Project Milestone", "Learning", "Team Shoutout"
 - **Interactive modals** - Clean Block Kit UI for entering celebrations
 - **App Home tab** - Shows bot info and commands
-- **Slash command** - `/celebrate` to share a win anytime
+- **Slash commands** - `/confetti` to share a win anytime (also `/highfive` or `/celebrate`)
 
 ## Quick Start
 
@@ -50,10 +50,11 @@ im:write            # Send DMs
 - Turn ON Interactivity
 - Set Request URL to: `https://your-domain.com/slack/events`
 
-**Slash Commands:**
-- Create new command: `/celebrate`
+**Slash Commands** (create all three with the same Request URL):
+- `/confetti` — "Share a win anytime" (primary)
+- `/highfive` — alias
+- `/celebrate` — alias
 - Request URL: `https://your-domain.com/slack/events`
-- Description: "Share something worth celebrating!"
 
 **App Home:**
 - Enable Home Tab
@@ -189,7 +190,7 @@ python scheduler.py --check
 ```
 
 **Test the slash command:**
-Type `/celebrate` in any Slack channel
+Type `/confetti` (or `/highfive` / `/celebrate`) in any Slack channel
 
 ## Customization
 

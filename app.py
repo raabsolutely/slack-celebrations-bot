@@ -396,21 +396,34 @@ def handle_private_submission(ack, body, client, view):
 
 
 # =============================================================================
-# SLASH COMMAND (OPTIONAL - for manual testing)
+# SLASH COMMANDS
 # =============================================================================
 
-@app.command("/celebrate")
-def handle_celebrate_command(ack, body, client):
-    """Handle the /celebrate slash command — opens the share a win modal directly."""
+def open_win_modal(ack, body, client, command_name):
+    """Shared handler for all slash commands — opens the share a win modal."""
     ack()
-
     try:
         client.views_open(
             trigger_id=body["trigger_id"],
             view=get_celebration_modal("public")
         )
     except SlackApiError as e:
-        logger.error(f"Error opening modal from /celebrate: {e}")
+        logger.error(f"Error opening modal from {command_name}: {e}")
+
+
+@app.command("/celebrate")
+def handle_celebrate_command(ack, body, client):
+    open_win_modal(ack, body, client, "/celebrate")
+
+
+@app.command("/confetti")
+def handle_confetti_command(ack, body, client):
+    open_win_modal(ack, body, client, "/confetti")
+
+
+@app.command("/highfive")
+def handle_highfive_command(ack, body, client):
+    open_win_modal(ack, body, client, "/highfive")
 
 
 # =============================================================================

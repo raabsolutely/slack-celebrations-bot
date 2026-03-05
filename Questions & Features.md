@@ -1,5 +1,12 @@
 # Questions & Features
 
+## Open questions
+
+### Channel naming & placement
+Proposed: bot posts into the same channel as shoutouts. Could potentially rename that channel to **#confetti** or **#highfive** to be more inclusive of personal wins — the current name "shoutouts" implies recognising others, whereas the bot also encourages celebrating yourself.
+
+---
+
 ## Decisions made
 
 ### Anonymous posting

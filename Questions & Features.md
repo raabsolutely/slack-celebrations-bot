@@ -1,5 +1,15 @@
 # Questions & Features
 
+## To Do
+
+- [ ] Test opt-in / opt-out flow end to end
+- [ ] Register `/confetti` and `/highfive` slash commands in Slack app settings
+- [ ] Update bot display name to Confetti / Highfive (Bot User + reinstall app)
+- [ ] Update nudge message design
+- [ ] Hand off to IT team for company Slack deployment
+
+---
+
 ## Feature ideas
 
 ### User-controlled nudge frequency

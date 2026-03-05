@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebrations Bot - Interactive Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .bot-icon {
+            width: 60px;
+            height: 60px;
+            background: #FFE135;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .demo-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* Slack Message Styling */
+        .slack-message {
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .slack-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .slack-avatar {
+            width: 36px;
+            height: 36px;
+            background: #FFE135;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .slack-name {
+            font-weight: bold;
+            color: #1d1c1d;
+        }
+
+        .slack-time {
+            color: #616061;
+            font-size: 0.85rem;
+        }
+
+        .slack-content {
+            color: #1d1c1d;
+            line-height: 1.6;
+        }
+
+        .slack-content strong {
+            font-weight: 700;
+        }
+
+        .slack-divider {
+            border-top: 1px solid #ddd;
+            margin: 15px 0;
+        }
+
+        .slack-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .slack-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .slack-btn-primary {
+            background: #007a5a;
+            color: white;
+        }
+
+        .slack-btn-primary:hover {
+            background: #005e46;
+        }
+
+        .slack-btn-secondary {
+            background: white;
+            color: #1d1c1d;
+            border: 1px solid #ddd;
+        }
+
+        .slack-btn-secondary:hover {
+            background: #f0f0f0;
+        }
+
+        /* Modal Styling */
+        .slack-modal {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            max-width: 500px;
+            margin: 20px auto;
+            overflow: hidden;
+            display: none;
+        }
+
+        .slack-modal.active {
+            display: block;
+        }
+
+        .modal-header {
+            background: #f8f8f8;
+            padding: 16px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            background: white;
+        }
+
+        .modal-footer {
+            background: #f8f8f8;
+            padding: 16px 20px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Channel Post */
+        .channel-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        .channel-name {
+            font-weight: 600;
+            color: #1264a3;
+        }
+
+        .celebration-post {
+            border-left: 4px solid #007a5a;
+            padding-left: 15px;
+            margin: 10px 0;
+        }
+
+        .celebration-text {
+            font-size: 1.05rem;
+            color: #1d1c1d;
+            margin: 10px 0;
+        }
+
+        .celebration-meta {
+            color: #616061;
+            font-size: 0.9rem;
+        }
+
+        /* Flow Arrow */
+        .flow-arrow {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+            font-size: 2rem;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .benefit {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .benefit-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .benefit-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Interactive States */
+        .view-step {
+            display: none;
+        }
+
+        .view-step.active {
+            display: block;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .nav-btn-next {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-btn-next:hover {
+            background: #5a6fd6;
+        }
+
+        .nav-btn-back {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .nav-btn-back:hover {
+            background: #d0d0d0;
+        }
+
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        /* Setup Info */
+        .setup-info {
+            background: #f0f4ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .setup-info h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .setup-info ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .setup-info li {
+            margin: 8px 0;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <div class="bot-icon">🎉</div>
+                Celebrations Bot
+            </h1>
+            <p>A Slack bot that encourages teams to share weekly wins</p>
+        </div>
+
+        <div class="progress-dots">
+            <div class="dot active" onclick="goToStep(0)"></div>
+            <div class="dot" onclick="goToStep(1)"></div>
+            <div class="dot" onclick="goToStep(2)"></div>
+            <div class="dot" onclick="goToStep(3)"></div>
+            <div class="dot" onclick="goToStep(4)"></div>
+        </div>
+
+        <!-- Step 0: Overview -->
+        <div class="view-step active" id="step-0">
+            <div class="demo-section">
+                <div class="section-title">
+                    <span class="step-number">✨</span>
+                    What does Celebrations Bot do?
+                </div>
+
+                <p style="font-size: 1.1rem; color: #333; line-height: 1.8; margin-bottom: 20px;">
+                    Every <strong>Friday at 3 PM</strong>, the bot sends a friendly DM to everyone in the
+                    <span class="highlight">#celebrations</span> channel, prompting them to share something
+                    worth celebrating from their week.
+                </p>
+
+                <div class="benefits">
+                    <div class="benefit">
+                        <div class="benefit-icon">🗓️</div>
+                        <div class="benefit-title">Automated</div>
+                        <div class="benefit-desc">Runs every Friday at 3 PM automatically</div>
+                    </div>
+                    <div class="benefit">
+                        <div class="benefit-icon">💬</div>
+                        <div class="benefit-title">Private Prompt</div>
+                        <div class="benefit-desc">DMs users privately so no pressure</div>
+                    </div>
+                    <div class="benefit">
+                        <div class="benefit-icon">🎯</div>
+                        <div class="benefit-title">Channel-Based</div>
+                        <div class="benefit-desc">Only members of #celebrations are included</div>
+                    </div>
+                    <div class="benefit">
+                        <div class="benefit-icon">🏆</div>
+                        <div class="benefit-title">Shared Wins</div>
+                        <div class="benefit-desc">Celebrations posted to public channel</div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn nav-btn-next" onclick="nextStep()">See How It Works →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1: Friday DM -->
+        <div class="view-step" id="step-1">
+            <div class="demo-section">
+                <div class="section-title">
+                    <span class="step-number">1</span>
+                    Friday 3 PM: User Receives a DM
+                </div>
+
+                <div class="slack-message">
+                    <div class="slack-header">
+                        <div class="slack-avatar">🎉</div>
+                        <div>
+                            <span class="slack-name">Celebrations Bot</span>
+                            <span class="slack-time">3:00 PM</span>
+                        </div>
+                    </div>
+                    <div class="slack-content">
+                        <p><strong>Happy Friday!</strong></p>
+                        <br>
+                        <p>It's time to celebrate the wins from this week!</p>
+                        <br>
+                        <p>Take a moment to reflect: What's something worth celebrating? It could be:</p>
+                        <p>• A project milestone you hit</p>
+                        <p>• A problem you solved</p>
+                        <p>• Something you learned</p>
+                        <p>• A personal achievement</p>
+                        <br>
+                        <p>Share your win with the team! ⭐</p>
+                    </div>
+                    <div class="slack-divider"></div>
+                    <div class="slack-buttons">
+                        <button class="slack-btn slack-btn-primary" onclick="nextStep()">Share a win</button>
+                        <button class="slack-btn slack-btn-secondary">Skip This Week</button>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn nav-btn-back" onclick="prevStep()">← Back</button>
+                    <button class="nav-btn nav-btn-next" onclick="nextStep()">Click "Share a win" →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Modal -->
+        <div class="view-step" id="step-2">
+            <div class="demo-section">
+                <div class="section-title">
+                    <span class="step-number">2</span>
+                    User Enters Their Celebration
+                </div>
+
+                <div class="slack-modal active">
+                    <div class="modal-header">
+                        <span class="modal-title">Share Your Win!</span>
+                        <button class="modal-close">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="margin-bottom: 15px; color: #555;">
+                            <strong>What's your celebration this week?</strong><br>
+                            Share something you're proud of, grateful for, or excited about!
+                        </p>
+                        <label class="modal-label">Your Celebration</label>
+                        <textarea class="modal-input" placeholder="This week I'm celebrating...">Finally shipped the new dashboard feature after 3 weeks of work! The client loved it 🚀</textarea>
+
+                        <label class="modal-label">Category (optional)</label>
+                        <select class="modal-select">
+                            <option>🚀 Project Milestone</option>
+                            <option>💡 Problem Solved</option>
+                            <option>📚 Learning</option>
+                            <option>🤝 Team Shoutout</option>
+                            <option>⭐ Personal Win</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="slack-btn slack-btn-secondary">Cancel</button>
+                        <button class="slack-btn slack-btn-primary" onclick="nextStep()">Share with Team</button>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn nav-btn-back" onclick="prevStep()">← Back</button>
+                    <button class="nav-btn nav-btn-next" onclick="nextStep()">Submit →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Posted to Channel -->
+        <div class="view-step" id="step-3">
+            <div class="demo-section">
+                <div class="section-title">
+                    <span class="step-number">3</span>
+                    Celebration Posted to #celebrations
+                </div>
+
+                <div class="slack-message">
+                    <div class="channel-header">
+                        <span>#</span>
+                        <span class="channel-name">celebrations</span>
+                    </div>
+
+                    <div class="slack-header">
+                        <div class="slack-avatar">🎉</div>
+                        <div>
+                            <span class="slack-name">Celebrations Bot</span>
+                            <span class="slack-time">3:02 PM</span>
+                        </div>
+                    </div>
+
+                    <div class="slack-content">
+                        <p><strong>A Win Worth Celebrating!</strong></p>
+                        <p style="color: #666; font-size: 0.9rem;">🚀 <em>Milestone</em></p>
+                        <div class="celebration-post">
+                            <p class="celebration-text">Finally shipped the new dashboard feature after 3 weeks of work! The client loved it 🚀</p>
+                        </div>
+                        <p class="celebration-meta">Shared by <strong style="color: #1264a3;">@sarah.chen</strong></p>
+                    </div>
+                </div>
+
+                <p style="text-align: center; color: #666; margin-top: 20px; font-style: italic;">
+                    The user also receives a private confirmation message
+                </p>
+
+                <div class="slack-message" style="max-width: 400px; margin: 15px auto;">
+                    <div class="slack-content" style="font-size: 0.95rem;">
+                        ✅ Your celebration has been shared with the team! Thanks for spreading the positivity!
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn nav-btn-back" onclick="prevStep()">← Back</button>
+                    <button class="nav-btn nav-btn-next" onclick="nextStep()">Setup Info →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Setup -->
+        <div class="view-step" id="step-4">
+            <div class="demo-section">
+                <div class="section-title">
+                    <span class="step-number">⚙️</span>
+                    What's Needed to Install
+                </div>
+
+                <div class="setup-info">
+                    <h4>📋 Requirements</h4>
+                    <ul>
+                        <li>Slack workspace admin approval</li>
+                        <li>A channel for the bot (e.g., #celebrations)</li>
+                        <li>Bot needs these permissions:
+                            <ul>
+                                <li><code>channels:read</code> - to see channel members</li>
+                                <li><code>chat:write</code> - to send messages</li>
+                                <li><code>im:write</code> - to send DMs</li>
+                                <li><code>users:read</code> - to identify users</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="setup-info" style="background: #e8f5e9; margin-top: 15px;">
+                    <h4 style="color: #2e7d32;">✅ What the Bot Does NOT Do</h4>
+                    <ul>
+                        <li>Does NOT read any messages in channels</li>
+                        <li>Does NOT access private channels or DMs</li>
+                        <li>Does NOT store any data externally</li>
+                        <li>Does NOT share information outside Slack</li>
+                    </ul>
+                </div>
+
+                <div class="setup-info" style="background: #fff8e1; margin-top: 15px;">
+                    <h4 style="color: #f57c00;">📅 Schedule</h4>
+                    <ul>
+                        <li>Runs automatically every <strong>Friday at 3:00 PM</strong> (Berlin time)</li>
+                        <li>Only messages members of the designated channel</li>
+                        <li>Users can skip any week with one click</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn nav-btn-back" onclick="prevStep()">← Back</button>
+                    <button class="nav-btn nav-btn-next" onclick="goToStep(0)">↺ Start Over</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 5;
+
+        function updateView() {
+            // Update steps
+            document.querySelectorAll('.view-step').forEach((step, index) => {
+                step.classList.toggle('active', index === currentStep);
+            });
+
+            // Update dots
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentStep);
+            });
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                updateView();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                updateView();
+            }
+        }
+
+        function goToStep(step) {
+            currentStep = step;
+            updateView();
+        }
+    </script>
+</body>
+</html>

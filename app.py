@@ -14,11 +14,9 @@ from config import (
     SLACK_SIGNING_SECRET,
     SLACK_APP_TOKEN,
     CELEBRATIONS_CHANNEL_ID,
-    PUBLIC_WINS_CHANNEL_ID,
+    SMALL_WINS_CHANNEL_ID,
     ADMIN_USER_ID,
     PROMPT_MESSAGE,
-    PUBLIC_CELEBRATION_HEADER,
-    PRIVATE_CELEBRATION_HEADER,
 )
 
 # Set up logging
@@ -122,7 +120,7 @@ def get_celebration_modal(share_type: str):
                     "multiline": True,
                     "placeholder": {
                         "type": "plain_text",
-                        "text": "This week I'm celebrating..."
+                        "text": "I'm celebrating..."
                     }
                 },
                 "label": {
@@ -142,56 +140,68 @@ def get_celebration_modal(share_type: str):
                         "text": "Select a category"
                     },
                     "options": [
-                        {"text": {"type": "plain_text", "text": ":rocket: Project Milestone"}, "value": "milestone"},
-                        {"text": {"type": "plain_text", "text": ":bulb: Problem Solved"}, "value": "problem"},
-                        {"text": {"type": "plain_text", "text": ":books: Learning"}, "value": "learning"},
-                        {"text": {"type": "plain_text", "text": ":handshake: Team Shoutout"}, "value": "shoutout"},
+                        {"text": {"type": "plain_text", "text": ":trophy: Project Milestone"}, "value": "milestone"},
+                        {"text": {"type": "plain_text", "text": ":zap: Problem Solved"}, "value": "problem"},
+                        {"text": {"type": "plain_text", "text": ":bulb: Today I Learned"}, "value": "learning"},
                         {"text": {"type": "plain_text", "text": ":star: Personal Win"}, "value": "personal"},
                         {"text": {"type": "plain_text", "text": ":sparkles: Other"}, "value": "other"}
                     ]
                 },
                 "label": {
                     "type": "plain_text",
-                    "text": "Category (optional)"
+                    "text": "Category"
+                }
+            },
+            {
+                "type": "input",
+                "block_id": "anonymous_input",
+                "optional": True,
+                "element": {
+                    "type": "checkboxes",
+                    "action_id": "anonymous_check",
+                    "options": [
+                        {
+                            "text": {"type": "plain_text", "text": "Post anonymously"},
+                            "value": "anonymous"
+                        }
+                    ]
+                },
+                "label": {
+                    "type": "plain_text",
+                    "text": "Anonymity"
                 }
             }
         ]
     }
 
 
-def format_celebration_message(user_id: str, celebration_text: str, category: str = None, is_public: bool = True):
+def format_celebration_message(user_id: str, celebration_text: str, category: str = None, is_public: bool = True, anonymous: bool = False):
     """
     Format a celebration for posting to a channel or DM.
     """
-    header = PUBLIC_CELEBRATION_HEADER if is_public else PRIVATE_CELEBRATION_HEADER
-
     category_emoji = {
-        "milestone": ":rocket:",
-        "problem": ":bulb:",
-        "learning": ":books:",
-        "shoutout": ":handshake:",
+        "milestone": ":trophy:",
+        "problem": ":zap:",
+        "learning": ":bulb:",
         "personal": ":star:",
         "other": ":sparkles:"
     }
 
-    category_display = ""
+    attribution = "Shared by anonymous" if anonymous else f"Shared by <@{user_id}>"
+
+    meta_parts = []
     if category:
         emoji = category_emoji.get(category, ":sparkles:")
-        category_display = f"\n{emoji} _{category.title()}_"
+        meta_parts.append(f"{emoji} {category.title()}")
+    meta_parts.append(attribution)
+    meta_text = "  ·  ".join(meta_parts)
 
     blocks = [
         {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"{header}{category_display}"
-            }
-        },
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": f">{celebration_text}"
+                "text": celebration_text
             }
         },
         {
@@ -199,7 +209,7 @@ def format_celebration_message(user_id: str, celebration_text: str, category: st
             "elements": [
                 {
                     "type": "mrkdwn",
-                    "text": f"Shared by <@{user_id}>"
+                    "text": meta_text
                 }
             ]
         }
@@ -318,16 +328,25 @@ def handle_public_submission(ack, body, client, view):
     celebration_text = values["celebration_input"]["celebration_text"]["value"]
     category = values["category_input"]["category_select"].get("selected_option")
     category_value = category["value"] if category else None
+    anonymous_selected = values.get("anonymous_input", {}).get("anonymous_check", {}).get("selected_options", [])
+    anonymous = len(anonymous_selected) > 0
 
     try:
         # Post to public channel
-        blocks = format_celebration_message(user_id, celebration_text, category_value, is_public=True)
+        blocks = format_celebration_message(user_id, celebration_text, category_value, is_public=True, anonymous=anonymous)
 
         client.chat_postMessage(
-            channel=PUBLIC_WINS_CHANNEL_ID,
-            text=f"New celebration from <@{user_id}>!",
+            channel=SMALL_WINS_CHANNEL_ID,
+            text="Someone celebrates..." if anonymous else f"New celebration from <@{user_id}>!",
             blocks=blocks
         )
+
+        # If anonymous, notify admin privately with the real identity
+        if anonymous:
+            client.chat_postMessage(
+                channel=ADMIN_USER_ID,
+                text=f":eye-in-speech-bubble: Anonymous celebration posted by <@{user_id}>:\n>{celebration_text}"
+            )
 
         # Confirm to user via DM
         client.chat_postMessage(
@@ -335,10 +354,10 @@ def handle_public_submission(ack, body, client, view):
             text=":white_check_mark: Your celebration has been shared with the team! Thanks for spreading the positivity!"
         )
 
-        logger.info(f"Public celebration posted by {user_id}")
+        logger.info(f"Public celebration posted by {user_id} (anonymous: {anonymous})")
 
-    except SlackApiError as e:
-        logger.error(f"Error posting public celebration: {e}")
+    except Exception as e:
+        logger.error(f"Error posting public celebration: {e}", exc_info=True)
 
 
 @app.view("celebration_submit_private")
@@ -382,23 +401,34 @@ def handle_private_submission(ack, body, client, view):
 
 @app.command("/celebrate")
 def handle_celebrate_command(ack, body, client):
-    """
-    Handle the /celebrate slash command.
-    Useful for testing or allowing users to share wins anytime.
-    """
+    """Handle the /celebrate slash command — opens the share a win modal directly."""
     ack()
 
-    user_id = body["user_id"]
-
     try:
-        blocks = get_celebration_prompt_blocks()
-        client.chat_postMessage(
-            channel=user_id,
-            text="Time to celebrate!",
-            blocks=blocks
+        client.views_open(
+            trigger_id=body["trigger_id"],
+            view=get_celebration_modal("public")
         )
     except SlackApiError as e:
-        logger.error(f"Error handling /celebrate command: {e}")
+        logger.error(f"Error opening modal from /celebrate: {e}")
+
+
+# =============================================================================
+# APP HOME BUTTON HANDLER
+# =============================================================================
+
+@app.action("home_share_win")
+def handle_home_share_win(ack, body, client):
+    """Handle the 'Share a Win' button on the App Home tab."""
+    ack()
+
+    try:
+        client.views_open(
+            trigger_id=body["trigger_id"],
+            view=get_celebration_modal("public")
+        )
+    except SlackApiError as e:
+        logger.error(f"Error opening modal from App Home: {e}")
 
 
 # =============================================================================
@@ -447,6 +477,24 @@ def update_home_tab(client, event, logger):
                             "type": "mrkdwn",
                             "text": "*Commands:*\n\n`/celebrate` - Share a win anytime!"
                         }
+                    },
+                    {
+                        "type": "divider"
+                    },
+                    {
+                        "type": "actions",
+                        "elements": [
+                            {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "Share a Win",
+                                    "emoji": True
+                                },
+                                "style": "primary",
+                                "action_id": "home_share_win"
+                            }
+                        ]
                     }
                 ]
             }

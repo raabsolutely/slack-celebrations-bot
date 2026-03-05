@@ -1,6 +1,19 @@
-# Slack Celebrations Bot 🎉
+# Confetti / Highfive
 
-A Slack bot that prompts team members every Friday at 3 PM to share something worth celebrating from their week. Users can choose to share publicly with the team or privately with an admin.
+Confetti / Highfive is a lightweight Slack bot that keeps teams connected to each other's wins — the ones that slip by in the busy flow of the week.
+
+Every Friday, it nudges your team to pause and reflect: not just what got done, but what's worth acknowledging. Shipping a feature, cracking a tough problem, getting through a hard week — big or small, saying it out loud matters.
+
+Submissions take seconds. Pick a category, write a line, and choose to share publicly or anonymously. Public wins land in a shared channel; anonymous ones are logged privately with your team lead.
+
+**What it does:**
+- Automated Friday prompts via DM
+- Clean submission modal — no friction
+- Posts to a shared #small-wins channel
+- Anonymous posting supported
+- `/celebrate` to share a win anytime
+
+Recognition shouldn't wait for the annual review — starting with recognising yourself.
 
 ## Features
 

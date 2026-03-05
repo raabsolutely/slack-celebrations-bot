@@ -17,9 +17,8 @@ SLACK_APP_TOKEN = os.environ.get("SLACK_APP_TOKEN")  # For Socket Mode (optional
 # Use the channel ID (e.g., "C01ABC123DE"), not the name
 CELEBRATIONS_CHANNEL_ID = os.environ.get("CELEBRATIONS_CHANNEL_ID", "")
 
-# The public channel where shared celebrations are posted
-# Can be the same as CELEBRATIONS_CHANNEL_ID or a different one
-PUBLIC_WINS_CHANNEL_ID = os.environ.get("PUBLIC_WINS_CHANNEL_ID", "")
+# The public channel where shared celebrations are posted (#small-wins)
+SMALL_WINS_CHANNEL_ID = os.environ.get("SMALL_WINS_CHANNEL_ID", "")
 
 # =============================================================================
 # ADMIN CONFIGURATION

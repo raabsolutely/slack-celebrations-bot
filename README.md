@@ -136,6 +136,20 @@ slack-celebrations-bot/
 
 ---
 
+## Test phase (beta rollout)
+
+The recommended approach for testing before a full company rollout is a **private beta channel** — no code changes needed.
+
+**How it works:**
+1. Create a private Slack channel (e.g. `#confetti-beta`) and add only invited testers
+2. Set `CELEBRATIONS_CHANNEL_ID` in `.env` to the ID of `#confetti-beta`
+3. Friday DM prompts will go only to members of that channel — automatically scoped
+4. Slash commands (`/confetti`, `/highfive`, `/celebrate`) are workspace-wide (this is an accepted tradeoff — non-testers finding the bot is fine)
+
+**Full rollout:** swap `CELEBRATIONS_CHANNEL_ID` to the real target channel (e.g. `#general` or a dedicated `#confetti` channel). No code changes required.
+
+---
+
 ## Customisation
 
 Edit `config.py` to change:

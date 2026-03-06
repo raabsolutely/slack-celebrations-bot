@@ -1,6 +1,6 @@
 # Confetti / Highfive
 
-Confetti / Highfive is a lightweight Slack bot that keeps teams connected to each other's wins — the ones that slip by in the busy flow of the week.
+Confetti / Highfive is a journalling and kudos bot for Slack — built to celebrate personal wins and give shout-outs to teammates.
 
 Every Friday, it nudges your team to pause and reflect: not just what got done, but what's worth acknowledging. Shipping a feature, cracking a tough problem, getting through a hard week — big or small, saying it out loud matters.
 

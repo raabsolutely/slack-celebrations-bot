@@ -1,7 +1,7 @@
 {
   "display_information": {
     "name": "Confetti / Highfive",
-    "description": "A Slack bot that nudges your team every Friday to share wins - big or small. Because saying it out loud matters.",
+    "description": "A journalling and kudos bot to celebrate personal wins and give shout-outs to teammates.",
     "background_color": "#2c5f2e"
   },
   "features": {

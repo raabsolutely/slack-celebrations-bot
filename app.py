@@ -497,7 +497,7 @@ def update_home_tab(client, event, logger):
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "*:tada: Welcome to Celebrations Bot!*"
+                            "text": "*:tada: Welcome to Confetti / Highfive!*"
                         }
                     },
                     {
@@ -524,7 +524,7 @@ def update_home_tab(client, event, logger):
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "*Commands:*\n\n`/celebrate` - Share a win anytime!"
+                            "text": "*Commands:*\n\n`/confetti` (or `/highfive`, `/celebrate`) - Share a win anytime!"
                         }
                     },
                     {

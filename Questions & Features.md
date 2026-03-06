@@ -2,11 +2,12 @@
 
 ## To Do
 
-- [ ] Test opt-in / opt-out flow end to end
-- [ ] Register `/confetti` and `/highfive` slash commands in Slack app settings
-- [ ] Update bot display name to Confetti / Highfive (Bot User + reinstall app)
-- [ ] Update nudge message design
+- [x] Test opt-in / opt-out flow end to end
+- [x] Register `/confetti` and `/highfive` slash commands in Slack app settings
+- [x] Update bot display name to Confetti / Highfive (Bot User + reinstall app)
+- [x] Update nudge message design
 - [ ] Hand off to IT team for company Slack deployment
+- [x] Enable Home Tab in Slack app settings (App Home → Show Tabs)
 
 ---
 

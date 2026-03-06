@@ -1,0 +1,57 @@
+{
+  "display_information": {
+    "name": "Confetti / Highfive",
+    "description": "A Slack bot that nudges your team every Friday to share wins - big or small. Because saying it out loud matters.",
+    "background_color": "#2c5f2e"
+  },
+  "features": {
+    "app_home": {
+      "home_tab_enabled": true,
+      "messages_tab_enabled": true,
+      "messages_tab_read_only_enabled": false
+    },
+    "bot_user": {
+      "display_name": "Confetti / Highfive",
+      "always_online": false
+    },
+    "slash_commands": [
+      {
+        "command": "/confetti",
+        "description": "Share a win anytime",
+        "usage_hint": "[your win]",
+        "should_escape": false
+      },
+      {
+        "command": "/highfive",
+        "description": "Share a win anytime",
+        "usage_hint": "[your win]",
+        "should_escape": false
+      },
+      {
+        "command": "/celebrate",
+        "description": "Share a win anytime",
+        "usage_hint": "[your win]",
+        "should_escape": false
+      }
+    ]
+  },
+  "oauth_config": {
+    "scopes": {
+      "bot": [
+        "channels:read",
+        "chat:write",
+        "commands",
+        "users:read",
+        "im:write"
+      ]
+    }
+  },
+  "settings": {
+    "interactivity": {
+      "is_enabled": true
+    },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": true,
+    "token_rotation_enabled": false
+  }
+}

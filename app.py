@@ -154,7 +154,8 @@ def get_celebration_modal(share_type: str):
                         {"text": {"type": "plain_text", "text": ":zap: Problem Solved"}, "value": "problem"},
                         {"text": {"type": "plain_text", "text": ":bulb: Today I Learned"}, "value": "learning"},
                         {"text": {"type": "plain_text", "text": ":star: Personal Win"}, "value": "personal"},
-                        {"text": {"type": "plain_text", "text": ":sparkles: Other"}, "value": "other"}
+                        {"text": {"type": "plain_text", "text": ":sparkles: Other"}, "value": "other"},
+                        {"text": {"type": "plain_text", "text": ":dizzy: Shout Out"}, "value": "shoutout"}
                     ]
                 },
                 "label": {
@@ -194,7 +195,8 @@ def format_celebration_message(user_id: str, celebration_text: str, category: st
         "problem": ":zap:",
         "learning": ":bulb:",
         "personal": ":star:",
-        "other": ":sparkles:"
+        "other": ":sparkles:",
+        "shoutout": ":dizzy:"
     }
 
     attribution = "Shared by anonymous" if anonymous else f"Shared by <@{user_id}>"

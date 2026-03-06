@@ -19,3 +19,18 @@ ENV/
 
 # Runtime data
 user_prefs.json
+
+# Internal dev notes (kept locally, not for IT)
+CLAUDE.md
+Questions & Features.md
+slack-app-manifest.yaml
+
+# Handoff docs (share via email/Notion, not git)
+Celebrations Bot - IT Brief.*
+*.odt
+.~lock.*
+
+# Demo files
+demo/
+bot-profile-pic.png
+Slack bot demo.zip

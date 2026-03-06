@@ -319,6 +319,7 @@ def handle_nudge_opt_out(ack, body, client):
         channel=user_id,
         text="No problem — you won't get Friday nudges anymore. You can still share a win anytime with `/confetti`."
     )
+    update_home_tab(client, {"user": user_id}, logger)
 
 
 @app.action("nudge_opt_in")
@@ -330,6 +331,7 @@ def handle_nudge_opt_in(ack, body, client):
         channel=user_id,
         text="You're back in! You'll get the Friday nudge again."
     )
+    update_home_tab(client, {"user": user_id}, logger)
 
 
 @app.action("skip_celebration")
@@ -487,9 +489,30 @@ def handle_home_share_win(ack, body, client):
 @app.event("app_home_opened")
 def update_home_tab(client, event, logger):
     """Update the App Home tab with info about the bot."""
+    user_id = event["user"]
+    opted_out = is_opted_out(user_id)
+
+    nudge_button = {
+        "type": "button",
+        "text": {
+            "type": "plain_text",
+            "text": "Stop Friday nudges",
+            "emoji": True
+        },
+        "action_id": "nudge_opt_out"
+    } if not opted_out else {
+        "type": "button",
+        "text": {
+            "type": "plain_text",
+            "text": "Re-enable Friday nudges",
+            "emoji": True
+        },
+        "action_id": "nudge_opt_in"
+    }
+
     try:
         client.views_publish(
-            user_id=event["user"],
+            user_id=user_id,
             view={
                 "type": "home",
                 "blocks": [
@@ -547,17 +570,7 @@ def update_home_tab(client, event, logger):
                     },
                     {
                         "type": "actions",
-                        "elements": [
-                            {
-                                "type": "button",
-                                "text": {
-                                    "type": "plain_text",
-                                    "text": "Re-enable Friday nudges",
-                                    "emoji": True
-                                },
-                                "action_id": "nudge_opt_in"
-                            }
-                        ]
+                        "elements": [nudge_button]
                     }
                 ]
             }

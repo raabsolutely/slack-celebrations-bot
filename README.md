@@ -65,7 +65,7 @@ To find IDs in Slack:
 
 You'll need:
 - `CELEBRATIONS_CHANNEL_ID` — the channel whose members receive the Friday DM prompt
-- `SMALL_WINS_CHANNEL_ID` — the channel where public wins are posted
+- `SMALL_WINS_CHANNEL_ID` — the channel where public wins are posted. Can be the same as `CELEBRATIONS_CHANNEL_ID` (wins post where the team already hangs out), or a separate channel if you want a dedicated space for wins (e.g. prompt everyone in `#general`, post wins to `#small-wins`)
 - `ADMIN_USER_ID` — the user who receives anonymous win notifications
 
 ### 7. Configure environment variables

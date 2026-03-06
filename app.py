@@ -154,8 +154,8 @@ def get_celebration_modal(share_type: str):
                         {"text": {"type": "plain_text", "text": ":zap: Problem Solved"}, "value": "problem"},
                         {"text": {"type": "plain_text", "text": ":bulb: Today I Learned"}, "value": "learning"},
                         {"text": {"type": "plain_text", "text": ":star: Personal Win"}, "value": "personal"},
-                        {"text": {"type": "plain_text", "text": ":sparkles: Other"}, "value": "other"},
-                        {"text": {"type": "plain_text", "text": ":dizzy: Shout Out"}, "value": "shoutout"}
+                        {"text": {"type": "plain_text", "text": ":dizzy: Shout Out"}, "value": "shoutout"},
+                        {"text": {"type": "plain_text", "text": ":sparkles: Other"}, "value": "other"}
                     ]
                 },
                 "label": {
